@@ -1,23 +1,35 @@
-import logo from './logo.svg';
-import './App.css';
+import { useRef, useEffect, useState } from "react";
 
 function App() {
+  const useClick = (onClick) => {
+    const ref = useRef();
+
+    useEffect(() => {
+      const element = ref.current;
+      if (typeof onClick !== "function") {
+        return;
+      }
+
+      if (element) {
+        element.addEventListener("click", onClick);
+      }
+      return () => {
+        if (element) {
+          element.removeEventListener("click", onClick);
+        }
+      };
+    }, [onClick]);
+    return ref.current;
+  };
+  const sayHello = () => {
+    console.log("say hello");
+  };
+  const title = useClick(sayHello);
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>React Hooks</h1>
+      <h2>useState</h2>
+      <input ref={title}></input>
     </div>
   );
 }
